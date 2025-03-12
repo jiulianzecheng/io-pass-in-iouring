@@ -795,6 +795,7 @@ static void io_iopoll_complete(struct io_ring_ctx *ctx, unsigned int *nr_events,
 		req = list_first_entry(done, struct io_kiocb, list);
 		list_del(&req->list);
 
+	  	printk(KERN_INFO "returned req->user_data: %llu\n", req->user_data);
 		io_cqring_fill_event(ctx, req->user_data, req->result);
 		(*nr_events)++;
 
@@ -991,6 +992,7 @@ static void io_complete_rw_iopoll(struct kiocb *kiocb, long res, long res2)
 	struct io_kiocb *req = container_of(kiocb, struct io_kiocb, rw);
 
 	//@added
+	printk(KERN_INFO "returned ki_usrflag:	%ld\n", kiocb->ki_usrflag);
 	req->user_data = kiocb->ki_usrflag;
 
 	if (kiocb->ki_flags & IOCB_WRITE)
@@ -1127,6 +1129,7 @@ static int io_prep_rw(struct io_kiocb *req, const struct sqe_submit *s,
 	kiocb->ki_flags = iocb_flags(kiocb->ki_filp);
 	kiocb->ki_hint = ki_hint_validate(file_write_hint(kiocb->ki_filp));
 	//@added
+	printk(KERN_INFO "sqe->usr_flag: %u\n", READ_ONCE(sqe->usr_flag));
 	kiocb->ki_usrflag = READ_ONCE(sqe->usr_flag);
 
 	ioprio = READ_ONCE(sqe->ioprio);

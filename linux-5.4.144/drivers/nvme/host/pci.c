@@ -984,6 +984,7 @@ static inline struct blk_mq_tags *nvme_queue_tagset(struct nvme_queue *nvmeq)
 static inline void pass_usrflag_to_bio(struct request *req, volatile struct nvme_completion *cqe)
 {
 	if(req && req->bio){
+		printk(KERN_INFO "returned cqe->result: %d\n", cqe->result.u64);
 		req->bio->bi_usrflag = cqe->result.u64;
 	}
 }

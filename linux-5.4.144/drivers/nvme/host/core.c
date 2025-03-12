@@ -781,6 +781,7 @@ static void usr_setup_cmd(struct nvme_ns *ns, struct request *req, struct nvme_c
 	WARN_ON(!req->bio);
 	if(req && req->bio)
 	{
+		printk(KERN_INFO "bi_usrflag: %d\n", req->bio->bi_usrflag);
 		c->rsvd2 = READ_ONCE(req->bio->bi_usrflag);
 	}
 }

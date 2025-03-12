@@ -319,6 +319,7 @@ static void blkdev_bio_end_io(struct bio *bio)
 			}
 
 			//@added
+			printk(KERN_INFO "returned bi_usrflag: %d\n", iocb->ki_usrflag);
 			iocb->ki_usrflag = bio->bi_usrflag;
 
 			dio->iocb->ki_complete(iocb, ret, 0);
@@ -389,6 +390,7 @@ __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter, int nr_pages)
 		bio->bi_end_io = blkdev_bio_end_io;
 		bio->bi_ioprio = iocb->ki_ioprio;
 		//@added
+		printk(KERN_INFO "ki_usrflag: %d\n", iocb->ki_usrflag);
 		bio->bi_usrflag = iocb->ki_usrflag;
 
 		ret = bio_iov_iter_get_pages(bio, iter);
