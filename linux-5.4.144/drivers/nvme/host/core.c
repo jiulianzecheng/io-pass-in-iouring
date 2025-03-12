@@ -772,7 +772,7 @@ EXPORT_SYMBOL_GPL(nvme_cleanup_cmd);
 //@added
 static void usr_setup_cmd(struct nvme_ns *ns, struct request *req, struct nvme_command *cmd)
 {
-	struct nvme_rw_command *rw = &cmd->rw;
+	struct nvme_rw_command *c = &cmd->rw;
 	
 	if(c->opcode != nvme_cmd_read){
 		return;
