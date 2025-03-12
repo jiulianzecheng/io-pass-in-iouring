@@ -769,6 +769,21 @@ void nvme_cleanup_cmd(struct request *req)
 }
 EXPORT_SYMBOL_GPL(nvme_cleanup_cmd);
 
+//@added
+static void usr_setup_cmd(struct nvme_ns *ns, struct request *req, struct nvme_command *cmd)
+{
+	struct nvme_rw_command *rw = &cmd->rw;
+	
+	if(c->opcode != nvme_cmd_read){
+		return;
+	}
+
+	WARN_ON(!REQ->bio);
+	if(req && req->bio)
+	{
+		c->rsvd2 = READ_ONCE(req->bio->bi_usrflag);
+	}
+}
 blk_status_t nvme_setup_cmd(struct nvme_ns *ns, struct request *req,
 		struct nvme_command *cmd)
 {
@@ -802,6 +817,9 @@ blk_status_t nvme_setup_cmd(struct nvme_ns *ns, struct request *req,
 
 	cmd->common.command_id = req->tag;
 	trace_nvme_setup_cmd(req, cmd);
+
+	//@added
+	usr_setup_cmd(ns, req, cmd);
 	return ret;
 }
 EXPORT_SYMBOL_GPL(nvme_setup_cmd);

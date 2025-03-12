@@ -990,6 +990,9 @@ static void io_complete_rw_iopoll(struct kiocb *kiocb, long res, long res2)
 {
 	struct io_kiocb *req = container_of(kiocb, struct io_kiocb, rw);
 
+	//@added
+	req->user_data = kiocb->ki_usrflag;
+
 	if (kiocb->ki_flags & IOCB_WRITE)
 		kiocb_end_write(req);
 
@@ -1123,6 +1126,8 @@ static int io_prep_rw(struct io_kiocb *req, const struct sqe_submit *s,
 	kiocb->ki_pos = READ_ONCE(sqe->off);
 	kiocb->ki_flags = iocb_flags(kiocb->ki_filp);
 	kiocb->ki_hint = ki_hint_validate(file_write_hint(kiocb->ki_filp));
+	//@added
+	kiocb->ki_usrflag = READ_ONCE(sqe->usrflag);
 
 	ioprio = READ_ONCE(sqe->ioprio);
 	if (ioprio) {

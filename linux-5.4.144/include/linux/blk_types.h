@@ -154,6 +154,9 @@ struct bio {
 	blk_status_t		bi_status;
 	u8			bi_partno;
 
+	//@added 
+	u64			bi_usrflag;
+
 	struct bvec_iter	bi_iter;
 
 	atomic_t		__bi_remaining;
