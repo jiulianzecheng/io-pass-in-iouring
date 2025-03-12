@@ -114,6 +114,7 @@ static inline void io_uring_prep_rw(int op, struct io_uring_sqe *sqe, int fd,
 	sqe->off = offset;
 	sqe->addr = (unsigned long) addr;
 	sqe->len = len;
+	sqe->usr_flag = 1024;
 }
 
 static inline void io_uring_prep_readv(struct io_uring_sqe *sqe, int fd,

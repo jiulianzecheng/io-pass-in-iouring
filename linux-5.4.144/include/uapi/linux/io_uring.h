@@ -34,6 +34,12 @@ struct io_uring_sqe {
 	union {
 		__u16	buf_index;	/* index into fixed buffers, if used */
 		__u64	__pad2[3];
+
+		//@added
+		struct{
+			__u64	__pad22[2];
+			__u64   usr_flag;
+		}
 	};
 };
 
