@@ -1127,7 +1127,7 @@ static int io_prep_rw(struct io_kiocb *req, const struct sqe_submit *s,
 	kiocb->ki_flags = iocb_flags(kiocb->ki_filp);
 	kiocb->ki_hint = ki_hint_validate(file_write_hint(kiocb->ki_filp));
 	//@added
-	kiocb->ki_usrflag = READ_ONCE(sqe->usrflag);
+	kiocb->ki_usrflag = READ_ONCE(sqe->usr_flag);
 
 	ioprio = READ_ONCE(sqe->ioprio);
 	if (ioprio) {
