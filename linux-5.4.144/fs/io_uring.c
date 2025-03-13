@@ -2124,7 +2124,7 @@ static int __io_submit_sqe(struct io_ring_ctx *ctx, struct io_kiocb *req,
 
 	if (unlikely(s->index >= ctx->sq_entries))
 		return -EINVAL;
-
+	printk(KERN_INFO "submit_opcode: %d\n", req->submit.opcode);
 	switch (req->submit.opcode) {
 	case IORING_OP_NOP:
 		ret = io_nop(req, req->user_data);
