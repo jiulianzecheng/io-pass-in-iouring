@@ -344,6 +344,7 @@ static void blkdev_bio_end_io(struct bio *bio)
 static ssize_t
 __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter, int nr_pages)
 {
+	printk(KERN_INFO "entered __blkdev_direct_IO\n");
 	struct file *file = iocb->ki_filp;
 	struct inode *inode = bdev_file_inode(file);
 	struct block_device *bdev = I_BDEV(inode);

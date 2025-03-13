@@ -1101,6 +1101,7 @@ static bool io_file_supports_async(struct file *file)
 static int io_prep_rw(struct io_kiocb *req, const struct sqe_submit *s,
 		      bool force_nonblock)
 {
+	printk(KERN_INFO "entered io_prep_rw\n");
 	const struct io_uring_sqe *sqe = s->sqe;
 	struct io_ring_ctx *ctx = req->ctx;
 	struct kiocb *kiocb = &req->rw;
