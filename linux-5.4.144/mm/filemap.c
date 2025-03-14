@@ -2292,6 +2292,7 @@ out:
 ssize_t
 generic_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
 {
+	printk(KERN_INFO "entered generic_file_read_iter\n");
 	size_t count = iov_iter_count(iter);
 	ssize_t retval = 0;
 
@@ -2342,6 +2343,7 @@ generic_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
 
 	retval = generic_file_buffered_read(iocb, iter, retval);
 out:
+	printk(KERN_INFO "exited generic_file_read_iter, retval = %d\n", retval);
 	return retval;
 }
 EXPORT_SYMBOL(generic_file_read_iter);

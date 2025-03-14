@@ -2037,6 +2037,7 @@ EXPORT_SYMBOL_GPL(blkdev_write_iter);
 
 ssize_t blkdev_read_iter(struct kiocb *iocb, struct iov_iter *to)
 {
+	printk(KERN_INFO "entered blkdev_read_iter\n");
 	struct file *file = iocb->ki_filp;
 	struct inode *bd_inode = bdev_file_inode(file);
 	loff_t size = i_size_read(bd_inode);
