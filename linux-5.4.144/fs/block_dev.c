@@ -203,6 +203,7 @@ static ssize_t
 __blkdev_direct_IO_simple(struct kiocb *iocb, struct iov_iter *iter,
 		int nr_pages)
 {
+	printk(KERN_INFO "entered __blkdev_direct_IO_simple\n");
 	struct file *file = iocb->ki_filp;
 	struct block_device *bdev = I_BDEV(bdev_file_inode(file));
 	struct bio_vec inline_vecs[DIO_INLINE_BIO_VECS], *vecs;
@@ -232,6 +233,9 @@ __blkdev_direct_IO_simple(struct kiocb *iocb, struct iov_iter *iter,
 	bio.bi_private = current;
 	bio.bi_end_io = blkdev_bio_end_io_simple;
 	bio.bi_ioprio = iocb->ki_ioprio;
+	//@added
+	printk(KERN_INFO "ki_usrflag in simple: %d\n", iocb->ki_usrflag);
+	bio.bi_usrflag = iocb->ki_usrflag;
 
 	ret = bio_iov_iter_get_pages(&bio, iter);
 	if (unlikely(ret))
@@ -478,6 +482,7 @@ __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter, int nr_pages)
 static ssize_t
 blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
 {
+	printk(KERN_INFO "entered blkdev_direct_IO\n");
 	int nr_pages;
 
 	nr_pages = iov_iter_npages(iter, BIO_MAX_PAGES + 1);
