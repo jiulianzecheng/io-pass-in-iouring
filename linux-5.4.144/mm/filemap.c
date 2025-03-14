@@ -2320,6 +2320,7 @@ generic_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
 
 		file_accessed(file);
 
+		printk(KERN_INFO "calling mapping->a_ops->direct_IO\n");
 		retval = mapping->a_ops->direct_IO(iocb, iter);
 		if (retval >= 0) {
 			iocb->ki_pos += retval;
@@ -2340,7 +2341,7 @@ generic_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
 		    IS_DAX(inode))
 			goto out;
 	}
-
+	printk(KERN_INFO "calling generic_file_buffered_read\n");
 	retval = generic_file_buffered_read(iocb, iter, retval);
 out:
 	printk(KERN_INFO "exited generic_file_read_iter, retval = %d\n", retval);

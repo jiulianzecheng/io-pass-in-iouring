@@ -963,6 +963,7 @@ static inline void dio_zero_block(struct dio *dio, struct dio_submit *sdio,
 static int do_direct_IO(struct dio *dio, struct dio_submit *sdio,
 			struct buffer_head *map_bh)
 {
+	printk(KERN_INFO "do_direct_IO\n");
 	const unsigned blkbits = sdio->blkbits;
 	const unsigned i_blkbits = blkbits + sdio->blkfactor;
 	int ret = 0;
@@ -1167,6 +1168,7 @@ do_blockdev_direct_IO(struct kiocb *iocb, struct inode *inode,
 		      get_block_t get_block, dio_iodone_t end_io,
 		      dio_submit_t submit_io, int flags)
 {
+	printk(KERN_INFO "Entering function:do_blockdev_direct_IO\n");
 	unsigned i_blkbits = READ_ONCE(inode->i_blkbits);
 	unsigned blkbits = i_blkbits;
 	unsigned blocksize_mask = (1 << blkbits) - 1;
@@ -1406,6 +1408,7 @@ ssize_t __blockdev_direct_IO(struct kiocb *iocb, struct inode *inode,
 	 *
 	 * Attempt to prefetch the pieces we likely need later.
 	 */
+	printk(KERN_INFO "entering __blockdev_direct_IO\n");
 	prefetch(&bdev->bd_disk->part_tbl);
 	prefetch(bdev->bd_queue);
 	prefetch((char *)bdev->bd_queue + SMP_CACHE_BYTES);

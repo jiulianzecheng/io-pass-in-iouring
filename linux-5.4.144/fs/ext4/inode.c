@@ -3841,6 +3841,7 @@ out:
 
 static ssize_t ext4_direct_IO_read(struct kiocb *iocb, struct iov_iter *iter)
 {
+	printk(KERN_INFO "ext4_direct_IO_read\n");
 	struct address_space *mapping = iocb->ki_filp->f_mapping;
 	struct inode *inode = mapping->host;
 	size_t count = iov_iter_count(iter);
@@ -3876,6 +3877,7 @@ out_unlock:
 
 static ssize_t ext4_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
 {
+	printk(KERN_INFO "ext4_direct_IO\n");
 	struct file *file = iocb->ki_filp;
 	struct inode *inode = file->f_mapping->host;
 	size_t count = iov_iter_count(iter);
