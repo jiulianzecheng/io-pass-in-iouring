@@ -69,6 +69,9 @@ struct io_uring_sqe {
 #define IORING_OP_SENDMSG	9
 #define IORING_OP_RECVMSG	10
 #define IORING_OP_TIMEOUT	11
+//@added
+#define IORING_OP_READ 22
+#define IORING_OP_WRITE 23
 
 /*
  * sqe->fsync_flags

@@ -2124,7 +2124,7 @@ static int __io_submit_sqe(struct io_ring_ctx *ctx, struct io_kiocb *req,
 
 	if (unlikely(s->index >= ctx->sq_entries))
 		return -EINVAL;
-	printk(KERN_INFO "submit_opcode: %d\n", req->submit.opcode);
+	printk(KERN_INFO "submit_opcode: %x\n", req->submit.opcode);
 	switch (req->submit.opcode) {
 	case IORING_OP_NOP:
 		ret = io_nop(req, req->user_data);
@@ -2165,6 +2165,13 @@ static int __io_submit_sqe(struct io_ring_ctx *ctx, struct io_kiocb *req,
 		break;
 	case IORING_OP_TIMEOUT:
 		ret = io_timeout(req, s->sqe);
+		break;
+	//@added
+	case IORING_OP_READ:
+		ret = io_read(req, s, force_nonblock);
+		break;
+	case IORING_OP_WRITE:
+		ret = io_write(req, s, force_nonblock);
 		break;
 	default:
 		ret = -EINVAL;
