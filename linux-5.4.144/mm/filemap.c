@@ -2345,7 +2345,7 @@ generic_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
 	printk(KERN_INFO "calling generic_file_buffered_read\n");
 	retval = generic_file_buffered_read(iocb, iter, retval);
 out:
-	printk(KERN_INFO "exited generic_file_read_iter, retval = %d\n", retval);
+	printk(KERN_INFO "generic_file_read_iter returned retval = %d\n", retval);
 	return retval;
 }
 EXPORT_SYMBOL(generic_file_read_iter);

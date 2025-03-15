@@ -2176,13 +2176,6 @@ static int __io_submit_sqe(struct io_ring_ctx *ctx, struct io_kiocb *req,
 	case IORING_OP_TIMEOUT:
 		ret = io_timeout(req, s->sqe);
 		break;
-	//@added
-	case IORING_OP_READ:
-		ret = io_read(req, s, force_nonblock);
-		break;
-	case IORING_OP_WRITE:
-		ret = io_write(req, s, force_nonblock);
-		break;
 	default:
 		printk(KERN_INFO "default case\n");
 		ret = -EINVAL;
