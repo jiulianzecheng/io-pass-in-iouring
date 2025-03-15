@@ -2056,6 +2056,7 @@ ssize_t blkdev_read_iter(struct kiocb *iocb, struct iov_iter *to)
 
 	ret = generic_file_read_iter(iocb, to);
 	iov_iter_reexpand(to, iov_iter_count(to) + shorted);
+	printk(KERN_INFO "blkdev_read_iter returned ret: %d\n",ret);
 	return ret;
 }
 EXPORT_SYMBOL_GPL(blkdev_read_iter);

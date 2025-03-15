@@ -1448,8 +1448,10 @@ static int io_read(struct io_kiocb *req, const struct sqe_submit *s,
 			ret2 = call_read_iter(file, kiocb, &iter);
 		else if (req->file->f_op->read)
 			ret2 = loop_rw_iter(READ, file, kiocb, &iter);
-		else
+		else{
+			printk(KERN_INFO "file_f_op don't exist returned -EINVAL\n");
 			ret2 = -EINVAL;
+		}
 
 		/*
 		 * In case of a short read, punt to async. This can happen
@@ -1477,6 +1479,7 @@ static int io_read(struct io_kiocb *req, const struct sqe_submit *s,
 		}
 	}
 	kfree(iovec);
+	printk(KERN_INFO "io_read returned ret: %ld\n", ret)
 	return ret;
 }
 
