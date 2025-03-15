@@ -1158,6 +1158,7 @@ static int io_prep_rw(struct io_kiocb *req, const struct sqe_submit *s,
 	if (ctx->flags & IORING_SETUP_IOPOLL) {
 		if (!(kiocb->ki_flags & IOCB_DIRECT) ||
 		    !kiocb->ki_filp->f_op->iopoll)
+			prink(KERN_INFO "IOPOLL not supported for this operation\n");
 			return -EOPNOTSUPP;
 
 		kiocb->ki_flags |= IOCB_HIPRI;
@@ -2473,6 +2474,7 @@ static int __io_queue_sqe(struct io_ring_ctx *ctx, struct io_kiocb *req,
 	int ret;
 
 	ret = __io_submit_sqe(ctx, req, s, true);
+	printk(KERN_INFO "__io_submit_sqe ret = %d\n", ret);
 
 	/*
 	 * We async punt it if the file wasn't marked NOWAIT, or if the file
@@ -2587,11 +2589,13 @@ static void io_submit_sqe(struct io_ring_ctx *ctx, struct sqe_submit *s,
 	int ret;
 
 	/* enforce forwards compatibility on users */
+	//检查flags是否合法
 	if (unlikely(s->sqe->flags & ~SQE_VALID_FLAGS)) {
 		ret = -EINVAL;
 		goto err;
 	}
 
+	//获取请求结构体
 	req = io_get_req(ctx, state);
 	if (unlikely(!req)) {
 		ret = -EAGAIN;
@@ -2599,6 +2603,7 @@ static void io_submit_sqe(struct io_ring_ctx *ctx, struct sqe_submit *s,
 	}
 
 	memcpy(&req->submit, s, sizeof(*s));
+	printk(KERN_INFO "io_req_set_file\n");
 	ret = io_req_set_file(ctx, s, state, req);
 	if (unlikely(ret)) {
 err_req:

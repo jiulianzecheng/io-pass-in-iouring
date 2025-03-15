@@ -2300,6 +2300,7 @@ generic_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
 		goto out; /* skip atime */
 
 	if (iocb->ki_flags & IOCB_DIRECT) {
+		printk(KERN_INFO "IOCB_DIRECT\n");
 		struct file *file = iocb->ki_filp;
 		struct address_space *mapping = file->f_mapping;
 		struct inode *inode = mapping->host;

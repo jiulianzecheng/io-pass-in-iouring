@@ -511,6 +511,27 @@ loff_t ext4_llseek(struct file *file, loff_t offset, int whence)
 	return vfs_setpos(file, offset, maxbytes);
 }
 
+//added
+static int ext4_iopoll(struct kiocb *kiocb, bool spin)
+{
+    struct file *file = kiocb->ki_filp;
+    struct address_space *mapping = file->f_mapping;
+    struct inode *inode = mapping->host;
+    struct block_device *bdev = inode->i_sb->s_bdev;
+    int ret;
+
+    // 检查块设备是否支持 iopoll
+    if (!bdev->bd_disk->fops->iopoll)
+        return -EOPNOTSUPP;
+
+    // 调用块设备的 iopoll 方法
+    ret = bdev->bd_disk->fops->iopoll(kiocb, spin);
+    if (ret < 0)
+        return ret;
+
+    return ret;
+}
+
 const struct file_operations ext4_file_operations = {
 	.llseek		= ext4_llseek,
 	.read_iter	= ext4_file_read_iter,
@@ -528,6 +549,7 @@ const struct file_operations ext4_file_operations = {
 	.splice_read	= generic_file_splice_read,
 	.splice_write	= iter_file_splice_write,
 	.fallocate	= ext4_fallocate,
+	.iopoll = ext4_iopoll,
 };
 
 const struct inode_operations ext4_file_inode_operations = {
