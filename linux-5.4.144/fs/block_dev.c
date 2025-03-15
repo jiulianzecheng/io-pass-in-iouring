@@ -323,7 +323,7 @@ static void blkdev_bio_end_io(struct bio *bio)
 			}
 
 			//@added
-			printk(KERN_INFO "returned bi_usrflag: %d\n", iocb->ki_usrflag);
+			printk(KERN_INFO "returned bi_usrflag: %d\n", bio->bi_usrflag);
 			iocb->ki_usrflag = bio->bi_usrflag;
 
 			dio->iocb->ki_complete(iocb, ret, 0);

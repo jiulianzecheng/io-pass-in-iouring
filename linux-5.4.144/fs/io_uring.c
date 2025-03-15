@@ -590,6 +590,7 @@ static struct io_uring_cqe *io_get_cqring(struct io_ring_ctx *ctx)
 static void io_cqring_fill_event(struct io_ring_ctx *ctx, u64 ki_user_data,
 				 long res)
 {
+	printk(KERN_INFO "entered io_cqring_fill_event\n");
 	struct io_uring_cqe *cqe;
 
 	/*
@@ -600,6 +601,7 @@ static void io_cqring_fill_event(struct io_ring_ctx *ctx, u64 ki_user_data,
 	cqe = io_get_cqring(ctx);
 	if (cqe) {
 		WRITE_ONCE(cqe->user_data, ki_user_data);
+		printk(KERN_INFO "filled cqe->user_data: %llu\n", cqe->user_data);
 		WRITE_ONCE(cqe->res, res);
 		WRITE_ONCE(cqe->flags, 0);
 	} else {
@@ -786,6 +788,7 @@ static inline unsigned int io_sqring_entries(struct io_ring_ctx *ctx)
 static void io_iopoll_complete(struct io_ring_ctx *ctx, unsigned int *nr_events,
 			       struct list_head *done)
 {
+	printk(KERN_INFO "entered io_iopoll_complete\n");
 	void *reqs[IO_IOPOLL_BATCH];
 	struct io_kiocb *req;
 	int to_free;
@@ -989,6 +992,7 @@ static void io_complete_rw(struct kiocb *kiocb, long res, long res2)
 
 static void io_complete_rw_iopoll(struct kiocb *kiocb, long res, long res2)
 {
+	printk(KERN_INFO "entered io_complete_rw_iopoll\n");
 	struct io_kiocb *req = container_of(kiocb, struct io_kiocb, rw);
 
 	//@added
