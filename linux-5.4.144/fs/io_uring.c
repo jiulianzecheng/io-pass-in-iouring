@@ -1485,7 +1485,7 @@ static int io_read(struct io_kiocb *req, const struct sqe_submit *s,
 		}
 	}
 	kfree(iovec);
-	printk(KERN_INFO "io_read returned ret: %ld\n", ret)
+	printk(KERN_INFO "io_read returned ret: %ld\n", ret);
 	return ret;
 }
 
