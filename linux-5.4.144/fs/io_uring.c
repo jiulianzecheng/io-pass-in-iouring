@@ -979,7 +979,12 @@ static void kiocb_end_write(struct io_kiocb *req)
 
 static void io_complete_rw(struct kiocb *kiocb, long res, long res2)
 {
+	printk(KERN_INFO "entered io_complete_rw\n");
 	struct io_kiocb *req = container_of(kiocb, struct io_kiocb, rw);
+
+	//@added
+	printk(KERN_INFO "returned ki_usrflag:	%ld\n", kiocb->ki_usrflag);
+	req->user_data = kiocb->ki_usrflag;
 
 	if (kiocb->ki_flags & IOCB_WRITE)
 		kiocb_end_write(req);
