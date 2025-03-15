@@ -1416,6 +1416,7 @@ static ssize_t loop_rw_iter(int rw, struct file *file, struct kiocb *kiocb,
 static int io_read(struct io_kiocb *req, const struct sqe_submit *s,
 		   bool force_nonblock)
 {
+	printk(KERN_INFO "entered io_read\n");
 	struct iovec inline_vecs[UIO_FASTIOV], *iovec = inline_vecs;
 	struct kiocb *kiocb = &req->rw;
 	struct iov_iter iter;
@@ -1424,6 +1425,7 @@ static int io_read(struct io_kiocb *req, const struct sqe_submit *s,
 	ssize_t read_size, ret;
 
 	ret = io_prep_rw(req, s, force_nonblock);
+	printk(KERN_INFO "io_prep_rw returned ret: %d\n", ret);
 	if (ret)
 		return ret;
 	file = kiocb->ki_filp;
@@ -1444,10 +1446,14 @@ static int io_read(struct io_kiocb *req, const struct sqe_submit *s,
 	if (!ret) {
 		ssize_t ret2;
 
-		if (file->f_op->read_iter)
+		if (file->f_op->read_iter){
 			ret2 = call_read_iter(file, kiocb, &iter);
-		else if (req->file->f_op->read)
+			printk(KERN_INFO "call_read_iter returned ret: %d\n", ret2);
+		}
+		else if (req->file->f_op->read){
 			ret2 = loop_rw_iter(READ, file, kiocb, &iter);
+			printk(KERN_INFO "loop_rw_iter returned ret: %d\n", ret2);
+		}
 		else{
 			printk(KERN_INFO "file_f_op don't exist returned -EINVAL\n");
 			ret2 = -EINVAL;
@@ -2178,6 +2184,7 @@ static int __io_submit_sqe(struct io_ring_ctx *ctx, struct io_kiocb *req,
 		ret = io_write(req, s, force_nonblock);
 		break;
 	default:
+		printk(KERN_INFO "default case\n");
 		ret = -EINVAL;
 		break;
 	}
