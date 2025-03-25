@@ -590,7 +590,7 @@ static struct io_uring_cqe *io_get_cqring(struct io_ring_ctx *ctx)
 static void io_cqring_fill_event(struct io_ring_ctx *ctx, u64 ki_user_data,
 				 long res)
 {
-	printk(KERN_INFO "entered io_cqring_fill_event\n");
+	//printk(KERN_INFO "entered io_cqring_fill_event\n");
 	struct io_uring_cqe *cqe;
 
 	/*
@@ -601,7 +601,7 @@ static void io_cqring_fill_event(struct io_ring_ctx *ctx, u64 ki_user_data,
 	cqe = io_get_cqring(ctx);
 	if (cqe) {
 		WRITE_ONCE(cqe->user_data, ki_user_data);
-		printk(KERN_INFO "filled cqe->user_data: %llu\n", cqe->user_data);
+		//printk(KERN_INFO "filled cqe->user_data: %llu\n", cqe->user_data);
 		WRITE_ONCE(cqe->res, res);
 		WRITE_ONCE(cqe->flags, 0);
 	} else {
@@ -788,7 +788,7 @@ static inline unsigned int io_sqring_entries(struct io_ring_ctx *ctx)
 static void io_iopoll_complete(struct io_ring_ctx *ctx, unsigned int *nr_events,
 			       struct list_head *done)
 {
-	printk(KERN_INFO "entered io_iopoll_complete\n");
+	//printk(KERN_INFO "entered io_iopoll_complete\n");
 	void *reqs[IO_IOPOLL_BATCH];
 	struct io_kiocb *req;
 	int to_free;
@@ -798,7 +798,7 @@ static void io_iopoll_complete(struct io_ring_ctx *ctx, unsigned int *nr_events,
 		req = list_first_entry(done, struct io_kiocb, list);
 		list_del(&req->list);
 
-	  	printk(KERN_INFO "returned req->user_data: %llu\n", req->user_data);
+	  	//printk(KERN_INFO "returned req->user_data: %llu\n", req->user_data);
 		io_cqring_fill_event(ctx, req->user_data, req->result);
 		(*nr_events)++;
 
@@ -997,11 +997,11 @@ static void io_complete_rw(struct kiocb *kiocb, long res, long res2)
 
 static void io_complete_rw_iopoll(struct kiocb *kiocb, long res, long res2)
 {
-	printk(KERN_INFO "entered io_complete_rw_iopoll\n");
+	//printk(KERN_INFO "entered io_complete_rw_iopoll\n");
 	struct io_kiocb *req = container_of(kiocb, struct io_kiocb, rw);
 
 	//@added
-	printk(KERN_INFO "returned ki_usrflag:	%ld\n", kiocb->ki_usrflag);
+	//printk(KERN_INFO "returned ki_usrflag:	%ld\n", kiocb->ki_usrflag);
 	req->user_data = kiocb->ki_usrflag;
 
 	if (kiocb->ki_flags & IOCB_WRITE)
@@ -1110,7 +1110,7 @@ static bool io_file_supports_async(struct file *file)
 static int io_prep_rw(struct io_kiocb *req, const struct sqe_submit *s,
 		      bool force_nonblock)
 {
-	printk(KERN_INFO "entered io_prep_rw\n");
+	//printk(KERN_INFO "entered io_prep_rw\n");
 	const struct io_uring_sqe *sqe = s->sqe;
 	struct io_ring_ctx *ctx = req->ctx;
 	struct kiocb *kiocb = &req->rw;
@@ -1139,7 +1139,7 @@ static int io_prep_rw(struct io_kiocb *req, const struct sqe_submit *s,
 	kiocb->ki_flags = iocb_flags(kiocb->ki_filp);
 	kiocb->ki_hint = ki_hint_validate(file_write_hint(kiocb->ki_filp));
 	//@added
-	printk(KERN_INFO "sqe->usr_flag: %u\n", READ_ONCE(sqe->usr_flag));
+	//printk(KERN_INFO "sqe->usr_flag: %u\n", READ_ONCE(sqe->usr_flag));
 	kiocb->ki_usrflag = READ_ONCE(sqe->usr_flag);
 
 	ioprio = READ_ONCE(sqe->ioprio);
@@ -1434,7 +1434,7 @@ static int io_read(struct io_kiocb *req, const struct sqe_submit *s,
 	ssize_t read_size, ret;
 
 	ret = io_prep_rw(req, s, force_nonblock);
-	printk(KERN_INFO "io_prep_rw returned ret: %d\n", ret);
+	//printk(KERN_INFO "io_prep_rw returned ret: %d\n", ret);
 	if (ret)
 		return ret;
 	file = kiocb->ki_filp;
@@ -1457,14 +1457,14 @@ static int io_read(struct io_kiocb *req, const struct sqe_submit *s,
 
 		if (file->f_op->read_iter){
 			ret2 = call_read_iter(file, kiocb, &iter);
-			printk(KERN_INFO "call_read_iter returned ret: %d\n", ret2);
+			//printk(KERN_INFO "call_read_iter returned ret: %d\n", ret2);
 		}
 		else if (req->file->f_op->read){
 			ret2 = loop_rw_iter(READ, file, kiocb, &iter);
-			printk(KERN_INFO "loop_rw_iter returned ret: %d\n", ret2);
+			//printk(KERN_INFO "loop_rw_iter returned ret: %d\n", ret2);
 		}
 		else{
-			printk(KERN_INFO "file_f_op don't exist returned -EINVAL\n");
+			//printk(KERN_INFO "file_f_op don't exist returned -EINVAL\n");
 			ret2 = -EINVAL;
 		}
 
@@ -1494,7 +1494,7 @@ static int io_read(struct io_kiocb *req, const struct sqe_submit *s,
 		}
 	}
 	kfree(iovec);
-	printk(KERN_INFO "io_read returned ret: %ld\n", ret);
+	//printk(KERN_INFO "io_read returned ret: %ld\n", ret);
 	return ret;
 }
 
@@ -2186,7 +2186,7 @@ static int __io_submit_sqe(struct io_ring_ctx *ctx, struct io_kiocb *req,
 		ret = io_timeout(req, s->sqe);
 		break;
 	default:
-		printk(KERN_INFO "default case\n");
+		//printk(KERN_INFO "default case\n");
 		ret = -EINVAL;
 		break;
 	}
@@ -2486,7 +2486,7 @@ static int __io_queue_sqe(struct io_ring_ctx *ctx, struct io_kiocb *req,
 	int ret;
 
 	ret = __io_submit_sqe(ctx, req, s, true);
-	printk(KERN_INFO "__io_submit_sqe ret = %d\n", ret);
+	//printk(KERN_INFO "__io_submit_sqe ret = %d\n", ret);
 
 	/*
 	 * We async punt it if the file wasn't marked NOWAIT, or if the file
