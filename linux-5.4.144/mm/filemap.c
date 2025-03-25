@@ -2292,7 +2292,7 @@ out:
 ssize_t
 generic_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
 {
-	printk(KERN_INFO "entered generic_file_read_iter\n");
+	//printk(KERN_INFO "entered generic_file_read_iter\n");
 	size_t count = iov_iter_count(iter);
 	ssize_t retval = 0;
 
@@ -2300,7 +2300,7 @@ generic_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
 		goto out; /* skip atime */
 
 	if (iocb->ki_flags & IOCB_DIRECT) {
-		printk(KERN_INFO "IOCB_DIRECT\n");
+		//printk(KERN_INFO "IOCB_DIRECT\n");
 		struct file *file = iocb->ki_filp;
 		struct address_space *mapping = file->f_mapping;
 		struct inode *inode = mapping->host;
@@ -2321,7 +2321,7 @@ generic_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
 
 		file_accessed(file);
 
-		printk(KERN_INFO "calling mapping->a_ops->direct_IO\n");
+		//printk(KERN_INFO "calling mapping->a_ops->direct_IO\n");
 		retval = mapping->a_ops->direct_IO(iocb, iter);
 		if (retval >= 0) {
 			iocb->ki_pos += retval;
@@ -2342,10 +2342,10 @@ generic_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
 		    IS_DAX(inode))
 			goto out;
 	}
-	printk(KERN_INFO "calling generic_file_buffered_read\n");
+	//printk(KERN_INFO "calling generic_file_buffered_read\n");
 	retval = generic_file_buffered_read(iocb, iter, retval);
 out:
-	printk(KERN_INFO "generic_file_read_iter returned retval = %d\n", retval);
+	//printk(KERN_INFO "generic_file_read_iter returned retval = %d\n", retval);
 	return retval;
 }
 EXPORT_SYMBOL(generic_file_read_iter);

@@ -2037,7 +2037,7 @@ EXPORT_SYMBOL_GPL(blkdev_write_iter);
 
 ssize_t blkdev_read_iter(struct kiocb *iocb, struct iov_iter *to)
 {
-	printk(KERN_INFO "entered blkdev_read_iter\n");
+	//printk(KERN_INFO "entered blkdev_read_iter\n");
 	struct file *file = iocb->ki_filp;
 	struct inode *bd_inode = bdev_file_inode(file);
 	loff_t size = i_size_read(bd_inode);
@@ -2056,7 +2056,7 @@ ssize_t blkdev_read_iter(struct kiocb *iocb, struct iov_iter *to)
 
 	ret = generic_file_read_iter(iocb, to);
 	iov_iter_reexpand(to, iov_iter_count(to) + shorted);
-	printk(KERN_INFO "blkdev_read_iter returned ret: %d\n",ret);
+	//printk(KERN_INFO "blkdev_read_iter returned ret: %d\n",ret);
 	return ret;
 }
 EXPORT_SYMBOL_GPL(blkdev_read_iter);
